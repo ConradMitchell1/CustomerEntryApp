@@ -1,0 +1,31 @@
+﻿@model List<CustomerModel>
+<div class="form-wrapper">
+	<div class="formCard">
+		<h2>Customer List</h2>
+		<ul class="customerList">
+			@foreach (var customer in Model) //Loops through each entry in the List and displays the entry and it's properties
+			{
+				<li>
+					<div class="customerEntry">
+						<span><strong>@customer.Name</strong> (@customer.Age years old)</span>
+						<span>PostCode:@customer.Postcode</span>
+						<span>Height:@customer.Height.ToString("0.00")m</span>
+
+						<form asp-controller="Customer" asp-action="Edit" asp-route-id="@customer.Id" method="get" style="display:inline;">
+							<button class="editBtn" type="submit">Edit</button> <!-- For each entry, adds a button that allows the user to edit that entry.-->
+						</form>
+					</div>
+					
+
+				</li>
+
+			}
+			<form asp-controller="Customer" asp-action="Add">
+				<button class="addBtn" type="submit">Add</button>
+			</form>
+		</ul>
+	</div>
+</div>
+
+
+
