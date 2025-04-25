@@ -35,13 +35,14 @@ namespace CustomerEntryApp.Controllers
         public IActionResult Edit(CustomerModel updatedCustomer)
         {
             var customer = _customers.FirstOrDefault(c => c.Id == updatedCustomer.Id);
-            if (customer == null) 
+            if (customer == null)
             {
                 return NotFound();
             }
-            if (ModelState.IsValid) 
+            if (ModelState.IsValid)
             {
-                if(decimal.Round((decimal)updatedCustomer.Height, 2) != (decimal)updatedCustomer.Height){
+                if (decimal.Round((decimal)updatedCustomer.Height, 2) != (decimal)updatedCustomer.Height)
+                {
                     ModelState.AddModelError("Height", "Height must have no more than 2 decimal places.");
                     return View("Edit", updatedCustomer);
                 }
@@ -57,19 +58,21 @@ namespace CustomerEntryApp.Controllers
         [HttpPost]
         public IActionResult Add(CustomerModel customer)
         {
+            
             if (ModelState.IsValid)
             {
                 if (decimal.Round((decimal)customer.Height, 2) != (decimal)customer.Height)
                 {
                     ModelState.AddModelError("Height", "Height must have no more than 2 decimal places.");
-                    return View("CustomerDetails", customer);
+                    return View("Add", customer);
                 }
                 customer.Id = Guid.NewGuid();
                 _customers.Add(customer);
                 return RedirectToAction("Index");
             }
 
-            return View(new CustomerModel());
+            return View("Add", customer);
+                     
         }
     }
 
