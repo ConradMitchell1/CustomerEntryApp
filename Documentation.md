@@ -18,11 +18,11 @@ ASP.NET MVC with Razor Views.
 - I ran into a problem with the button logic in my partial view: having both an OK and a Cancel button caused unexpected behaviour. I originally wanted the cancel button to redirect back to the index page, but having two <button> elements with different actions led to errors.
 - To resolve this, I replaced the Cancel <button> with an <a href> link styled as a button, which handled redirection without inerferance from form submission logic.
 
-  **5. Next steps for Improvement**
-  - Improve the UI using a front-end framework like Bootstrap.
-  - Although it was specifically asked for in-memory storage, I would add persistant data storage using Entity Framework with SQLite or SQL Server.
-  - Utilise JavaScript for improving user experience, such as automatically disabling/enabling the OK button based on real-time form validity.
-  - Showing and hiding modal dialogs.
-  - Better Validation feedback.
+**5. Next steps for Improvement**
+- Improve the UI using a front-end framework like Bootstrap.
+- Although it was specifically asked for in-memory storage, I would add persistant data storage using Entity Framework with SQLite or SQL Server.
+- Utilise JavaScript for improving user experience, such as automatically disabling/enabling the OK button based on real-time form validity.
+- Showing and hiding modal dialogs.
+- Better Validation feedback.
     
   
