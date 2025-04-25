@@ -15,8 +15,8 @@ ASP.NET MVC with Razor Views.
   
 **4. Issues Found**
 - Handling Validation error on the model required some tweaking, meeting the requirement for only 2 decimal places on height required extra logic in the controller.
-- I ran into a problem with the button logic in my partial view: having both an OK and a Cancel button caused unexpected behaviour. I originally wanted the cancel button to redirect back to the index page, but having two <button> elements with different actions led to errors.
-- To resolve this, I replaced the Cancel <button> with an <a href> link styled as a button, which handled redirection without inerferance from form submission logic.
+- I ran into a problem with the button logic in my partial view: having both an OK and a Cancel button caused unexpected behaviour. I originally wanted the cancel button to redirect back to the index page, but having two button elements with different actions led to errors.
+- To resolve this, I replaced the Cancel <button> with an a href link styled as a button, which handled redirection without inerferance from form submission logic.
 
 **5. Next steps for Improvement**
 - Improve the UI using a front-end framework like Bootstrap.
