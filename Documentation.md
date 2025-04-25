@@ -1,11 +1,11 @@
 ## Documentation
 
 **1. Time spent**
-Roughly spent about 1hr30mins on getting the requirements completed, and roughly about another hour
+- Roughly spent about 1hr30mins on getting the requirements completed, and roughly about another hour
 adding a test suite + some styling to the site.
 
 **2. Choice of frontend technology**
-ASP.NET MVC with Razor Views.
+- ASP.NET MVC with Razor Views.
 
 **3. Design Choices Taken**
 - Used ASP.NET MVC to seperate application logic(Controller), data(Model) and user interface(View).
