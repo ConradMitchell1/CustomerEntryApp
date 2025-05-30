@@ -64,7 +64,6 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background: linear-gradient(to right, #e0f0ff, #cde5ff);
 }
 
 .customerForm {
@@ -108,4 +107,16 @@ body {
 
 .formButton:hover {
     background-color: #0056b3;
+}
+
+.modal {
+    display:none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.5);
 }

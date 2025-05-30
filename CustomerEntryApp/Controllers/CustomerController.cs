@@ -37,42 +37,40 @@ namespace CustomerEntryApp.Controllers
             var customer = _customers.FirstOrDefault(c => c.Id == updatedCustomer.Id);
             if (customer == null)
             {
-                return NotFound();
-            }
-            if (ModelState.IsValid)
-            {
-                if (decimal.Round((decimal)updatedCustomer.Height, 2) != (decimal)updatedCustomer.Height)
-                {
-                    ModelState.AddModelError("Height", "Height must have no more than 2 decimal places.");
-                    return View("Edit", updatedCustomer);
-                }
-                customer.Name = updatedCustomer.Name;
-                customer.Age = updatedCustomer.Age;
-                customer.Height = updatedCustomer.Height;
-                customer.Postcode = updatedCustomer.Postcode;
-
+                TempData["Message"] = "Customer not found.";
                 return RedirectToAction("Index");
             }
-            return View("Edit", updatedCustomer);
+
+            if (!ModelState.IsValid || decimal.Round((decimal)updatedCustomer.Height, 2) != (decimal)updatedCustomer.Height)
+            {
+                TempData["Message"] = "Failed to update customer. Please check input.";
+                return RedirectToAction("Index");
+            }
+
+            customer.Name = updatedCustomer.Name;
+            customer.Age = updatedCustomer.Age;
+            customer.Height = updatedCustomer.Height;
+            customer.Postcode = updatedCustomer.Postcode;
+
+            TempData["Message"] = "Customer updated successfully!";
+            return RedirectToAction("Index");
         }
         [HttpPost]
         public IActionResult Add(CustomerModel customer)
         {
-            
-            if (ModelState.IsValid)
+
+            if (!ModelState.IsValid || decimal.Round((decimal)customer.Height, 2) != (decimal)customer.Height)
             {
-                if (decimal.Round((decimal)customer.Height, 2) != (decimal)customer.Height)
-                {
-                    ModelState.AddModelError("Height", "Height must have no more than 2 decimal places.");
-                    return View("Add", customer);
-                }
-                customer.Id = Guid.NewGuid();
-                _customers.Add(customer);
+                TempData["Message"] = "Failed to add customer. Please check input.";
                 return RedirectToAction("Index");
             }
 
-            return View("Add", customer);
-                     
+            customer.Id = Guid.NewGuid();
+            _customers.Add(customer);
+
+            TempData["Message"] = "Customer added successfully!";
+            return RedirectToAction("Index");
+
         }
     }
 

@@ -1,4 +1,10 @@
 ﻿@model List<CustomerModel>
+@if (TempData["Message"] != null)
+{
+	<div class="alert">
+		@TempData["Message"]
+	</div>
+}
 <div class="form-wrapper">
 	<div class="formCard">
 		<h2>Customer List</h2>
@@ -11,21 +17,189 @@
 						<span><strong>PostCode:</strong> @customer.Postcode </span>
 						<span><strong>Height:</strong> @customer.Height.ToString("0.00")m</span>
 
-						<form asp-controller="Customer" asp-action="Edit" asp-route-id="@customer.Id" method="get" style="display:inline;">
-							<button class="editBtn" type="submit">Edit</button> <!-- For each entry, adds a button that allows the user to edit that entry.-->
-						</form>
+						<button class="editBtn" data-id="@customer.Id"
+												data-name="@customer.Name"
+												data-age="@customer.Age"
+												data-postcode="@customer.Postcode"
+												data-height="@customer.Height.ToString("0.00")">
+								Edit
+						</button>
 					</div>
-					
-
 				</li>
-
 			}
-			<form asp-controller="Customer" asp-action="Add">
-				<button class="addBtn" type="submit">Add</button>
-			</form>
+			
 		</ul>
+		<button class="addBtn">Add</button>
 	</div>
 </div>
 
+<!-- The Modal -->
+
+<div id="myModal" class="modal">
+	<div class="form-wrapper">
+		<form id="customerForm" class="customerForm" asp-action="Edit" method="post">
+			<input type="hidden" id="CustomerId" name="Id" />
+			<div class="form-grid">
+				<label>Name</label>
+				<input type="text" id="CustomerName" name="Name" required />
+				<small class="error-message" id="errorName"></small>
+			</div>
+
+			<div class="form-grid">
+				<label>Age</label>
+				<input type="number" id="CustomerAge" name="Age" required />
+				<small class="error-message" id="errorAge"></small>
+			</div>
+
+			<div class="form-grid">
+				<label>Height (m)</label>
+				<input type="number" id="CustomerHeight" name="Height" step="0.01" required />
+				<small class="error-message" id="errorHeight"></small>
+			</div>
+
+			<div class="form-grid">
+				<label>Postcode</label>
+				<input type="text" id="CustomerPostcode" name="Postcode" required />
+				<small class="error-message" id="errorPostcode"></small>
+			</div>
+			<div style="grid-column: 1 / span 2; text-align: center;">
+				<button id="saveButton" class="formButton" disabled style="visibility:hidden" type="submit">Save</button>
+				<a href="@Url.Action("Index", "Customer")" class="formButton" style="margin-left: 10px; text-decoration:none;">Cancel</a>
+			</div>
+		</form>
+	</div>
+</div>
+
+<!-- Javascript -->
+
+<script>
+	var modal = document.getElementById("myModal");
+
+	var editButtons = document.querySelectorAll(".editBtn")
+	var addButton = document.querySelector(".addBtn");
+
+	var form = document.getElementById("customerForm");
+
+	function openModal(){
+		modal.style.display = "block";
+		validateForm();
+	}
+
+	function closeModal(){
+		modal.style.display = "none";
+	}
+
+	editButtons.forEach(function(button) {
+		button.addEventListener("click", function() {
+			document.getElementById("CustomerId").value = button.getAttribute("data-id");
+			document.getElementById("CustomerName").value = button.getAttribute("data-name");
+			document.getElementById("CustomerAge").value = button.getAttribute("data-age");
+			document.getElementById("CustomerHeight").value = button.getAttribute("data-height");
+			document.getElementById("CustomerPostcode").value = button.getAttribute("data-postcode");
+
+			form.action = '/Customer/Edit';
+			openModal();
+			validateForm();
+		});
+	});
+
+	addButton.addEventListener("click", function() {
+		document.getElementById("CustomerId").remove();
+		document.getElementById("CustomerName").value = "";
+		document.getElementById("CustomerAge").value = "";
+		document.getElementById("CustomerHeight").value = "";
+		document.getElementById("CustomerPostcode").value = "";
+
+		form.action = '/Customer/Add';
+
+		openModal();
+		validateForm();
+	})
 
 
+
+	window.onclick = function(event){
+		if(event.target == modal){
+			closeModal();
+		}
+	}
+</script>
+
+<script>
+	const saveButton = document.getElementById("saveButton");
+	
+
+	function validateForm(){
+		const formInputs = document.querySelectorAll("#customerForm input");
+		let isValid = true;
+
+		formInputs.forEach(function(input){
+			// Skip hidden inputs
+			if (input.type !== "hidden" && (!input.checkValidity() || input.value.trim() === "")) {
+				isValid = false;
+			}
+		});
+
+		if(isValid){
+			saveButton.disabled = false;
+			saveButton.style.visibility = "visible";
+		}
+		else{
+			saveButton.disabled = true;
+			saveButton.style.visibility = "hidden";
+		}
+	}
+
+	function validateField(input) {
+		const name = input.name;
+		let error = "";
+
+		if (name === "Name" && input.value.trim() === "") {
+			error = "Name is required.";
+		}
+
+		if (name === "Age") {
+			const age = parseInt(input.value);
+			if (isNaN(age) || age <= 0) {
+				error = "Age must be a positive number.";
+			} else if (age > 110) {
+				error = "Age must be between 0 and 110.";
+			}
+		}
+
+		if (name === "Height") {
+			const height = parseFloat(input.value);
+			const heightPattern = /^\d+(\.\d{1,2})?$/;
+			if (input.value.trim() === "" || !heightPattern.test(input.value)) {
+				error = "Height must have up to 2 decimal places.";
+			} else if (isNaN(height) || height < 0 || height > 2.5) {
+				error = "Height must be between 0 and 2.50 meters.";
+			}
+		}
+
+		if (name === "Postcode") {
+			if (input.value.trim() === "") {
+				error = "Postcode is required.";
+			} else {
+				const postCodePattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]+$/;
+				if (!postCodePattern.test(input.value)) {
+					error = "Postcode must contain both letters and numbers.";
+				}
+			}
+		}
+
+		const errorElement = document.getElementById("error" + name);
+		if (errorElement) {
+			errorElement.textContent = error;
+		}
+	}
+
+	form.addEventListener("input", function(event) {
+	if (event.target.tagName === "INPUT") {
+		validateField(event.target);   // validate field immediately
+		validateForm();                // validate overall form immediately
+	}
+	});
+
+	document.addEventListener("DOMContentLoaded", validateForm);
+</script>
